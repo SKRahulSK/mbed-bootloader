@@ -63,19 +63,12 @@ extern ARM_UC_PAAL_UPDATE MBED_CLOUD_CLIENT_UPDATE_STORAGE;
 #endif
 
 #if defined(ARM_UC_USE_PAL_BLOCKDEVICE) && (ARM_UC_USE_PAL_BLOCKDEVICE==1)
-#include "SDBlockDevice.h"
 
-/* initialise sd card blockdevice */
-#if defined(MBED_CONF_APP_SPI_MOSI) && defined(MBED_CONF_APP_SPI_MISO) && \
-    defined(MBED_CONF_APP_SPI_CLK)  && defined(MBED_CONF_APP_SPI_CS)
-SDBlockDevice sd(MBED_CONF_APP_SPI_MOSI, MBED_CONF_APP_SPI_MISO,
-                 MBED_CONF_APP_SPI_CLK,  MBED_CONF_APP_SPI_CS);
-#else
-SDBlockDevice sd(MBED_CONF_SD_SPI_MOSI, MBED_CONF_SD_SPI_MISO,
-                 MBED_CONF_SD_SPI_CLK,  MBED_CONF_SD_SPI_CS);
-#endif
+// Flash interface on the L-TEK xDot shield
+#include "AT45BlockDevice.h"
+AT45BlockDevice bd(SPI_MOSI, SPI_MISO, SPI_SCK, SPI_NSS);
 
-BlockDevice *arm_uc_blockdevice = &sd;
+BlockDevice *arm_uc_blockdevice = &bd;
 #endif
 
 #ifndef MBED_CONF_APP_APPLICATION_START_ADDRESS
@@ -169,6 +162,9 @@ int main(void)
 
     /* forward control to ACTIVE application if it is deemed sane */
     if (canForward) {
+        /* copy the current firmware into external storage (if needed) */
+        copyActiveApplicationIntoFlash(&bd, MBED_CONF_APP_EXTERNAL_FLASH_APPLICATION_COPY_ADDRESS);
+
 #if defined(BOOTLOADER_POWER_CUT_TEST) && (BOOTLOADER_POWER_CUT_TEST == 1)
         power_cut_test_assert_state(POWER_CUT_TEST_STATE_END);
         wait(5);

@@ -5,7 +5,9 @@
         "SHOW_PROGRESS_BAR=1",
         "MAX_BOOT_RETRIES=3",
         "ARM_UC_USE_PAL_CRYPTO=0",
-        "ARM_BOOTLOADER_USE_NVSTORE_ROT=1",
+        "ARM_BOOTLOADER_USE_NVSTORE_ROT=0",
+        "ARM_UC_ALL_TRACE_ENABLE=0",
+        "ARM_UC_USE_SOTP=0",
         "ARM_UC_USE_PAL_BLOCKDEVICE=1",
         "ARM_UC_PAAL_TRACE_ENABLE=0",
         "MBED_CLOUD_CLIENT_UPDATE_STORAGE=ARM_UCP_FLASHIAP_BLOCKDEVICE",
@@ -35,6 +37,10 @@
         },
         "flash-size": {
             "help": "Total size of internal flash. Only used in this config to help the definition of other macros.",
+            "value": null
+        },
+        "external-flash-application-copy-address": {
+            "help": "Place to copy the current firmware in external flash. Useful for delta updates. Does not need to be aligned.",
             "value": null
         }
     },
@@ -204,6 +210,23 @@
               "PAL_USE_HW_ROT=0",
               "PAL_USE_HW_RTC=0",
               "PAL_INT_FLASH_NUM_SECTIONS=2"
+            ]
+        },
+        "FF1705_L151CC": {
+            "flash-start-address"              : "0x08000000",
+            "flash-size"                       : "(256*1024)",
+            "update-client.application-details": "(MBED_CONF_APP_FLASH_START_ADDRESS+32*1024)",
+            "application-start-address"        : "(MBED_CONF_APP_FLASH_START_ADDRESS+33*1024)",
+            "max-application-size"             : "DEFAULT_MAX_APPLICATION_SIZE",
+            "update-client.storage-address"    : "528",
+            "update-client.storage-size"       : "(512*1024 + (272*2))",
+            "update-client.storage-page"       : 528,
+            "update-client.storage-locations"  : 2,
+            "external-flash-application-copy-address": "528 + (512*1024 + (272*2))",
+            "target.macros_add"                : [
+                "MBED_CLOUD_CLIENT_UPDATE_BUFFER=(528*2)",
+                "PAL_USE_HW_ROT=0",
+                "BUFFER_SIZE=16896"
             ]
         }
     }
