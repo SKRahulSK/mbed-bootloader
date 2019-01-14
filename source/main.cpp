@@ -64,11 +64,23 @@ extern ARM_UC_PAAL_UPDATE MBED_CLOUD_CLIENT_UPDATE_STORAGE;
 
 #if defined(ARM_UC_USE_PAL_BLOCKDEVICE) && (ARM_UC_USE_PAL_BLOCKDEVICE==1)
 
+#if defined(TARGET_FF1705_L151CC)
 // Flash interface on the L-TEK xDot shield
 #include "AT45BlockDevice.h"
 AT45BlockDevice bd(SPI_MOSI, SPI_MISO, SPI_SCK, SPI_NSS);
 
+#elif defined(TARGET_DISCO_L475VG_IOT01A)
+// Flash interface on DISCO L475 board
+#include "QSPIFBlockDevice.h"
+QSPIFBlockDevice bd(QSPI_FLASH1_IO0, QSPI_FLASH1_IO1, QSPI_FLASH1_IO2, QSPI_FLASH1_IO3,
+    QSPI_FLASH1_SCK, QSPI_FLASH1_CSN, QSPIF_POLARITY_MODE_0, MBED_CONF_QSPIF_QSPI_FREQ);
+
+#else
+#error "No storage layer selected, see main.cpp"
+#endif
+
 BlockDevice *arm_uc_blockdevice = &bd;
+
 #endif
 
 #ifndef MBED_CONF_APP_APPLICATION_START_ADDRESS

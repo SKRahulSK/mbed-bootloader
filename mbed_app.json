@@ -112,13 +112,18 @@
         "DISCO_L475VG_IOT01A": {
             "flash-start-address"              : "0x08000000",
             "flash-size"                       : "(1024*1024)",
-            "nvstore.area_1_address"           : "(MBED_CONF_APP_FLASH_START_ADDRESS+32*1024)",
-            "nvstore.area_1_size"              : "(2*1024)",
-            "nvstore.area_2_address"           : "(MBED_CONF_APP_FLASH_START_ADDRESS+34*1024)",
-            "nvstore.area_2_size"              : "(2*1024)",
-            "update-client.application-details": "(MBED_CONF_APP_FLASH_START_ADDRESS+36*1024)",
-            "application-start-address"        : "(MBED_CONF_APP_FLASH_START_ADDRESS+38*1024)",
-            "max-application-size"             : "DEFAULT_MAX_APPLICATION_SIZE"
+            "update-client.application-details": "(MBED_CONF_APP_FLASH_START_ADDRESS+34*1024)",
+            "update-client.storage-address"    : "0x1000",
+            "update-client.storage-size"       : "0x200000",
+            "update-client.storage-page"       : "0x1000",
+            "update-client.storage-locations"  : 2,
+            "external-flash-application-copy-address": "0x1000 + (2 * 0x100000)",
+            "application-start-address"        : "(MBED_CONF_APP_FLASH_START_ADDRESS+36*1024)",
+            "max-application-size"             : "DEFAULT_MAX_APPLICATION_SIZE",
+            "target.macros_add"                : [
+                "MBED_CLOUD_CLIENT_UPDATE_BUFFER=0x2000",
+                "BUFFER_SIZE=0x4000"
+            ]
         },
         "NUCLEO_F411RE": {
             "flash-start-address"              : "0x08000000",
