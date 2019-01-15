@@ -533,11 +533,20 @@ int copyActiveApplicationIntoFlash(BlockDevice* bd, uint32_t bdOffset)
                                 appStart + (details.size - remaining),
                                 readSize);
 
-            /* and write it to external flash */
-            ubd.program(buffer_array, offset, readSize);
+            if (status != 0) {
+                break;
+            }
 
+            /* and write it to external flash */
+            status = ubd.program(buffer_array, offset, readSize);
+            if (status != 0) {
+                break;
+            }
+
+#ifdef TARGET_FF1705_L151CC
             /* flash driver does not like writing quickly? */
             wait_ms(100);
+#endif
 
             /* update remaining bytes */
             remaining -= readSize;
@@ -547,6 +556,10 @@ int copyActiveApplicationIntoFlash(BlockDevice* bd, uint32_t bdOffset)
             printProgress(details.size - remaining,
                             details.size);
 #endif
+        }
+
+        if (status != 0) {
+            return RESULT_ERROR;
         }
 
         unsigned char shaInBd[SIZEOF_SHA256];
@@ -564,6 +577,7 @@ int copyActiveApplicationIntoFlash(BlockDevice* bd, uint32_t bdOffset)
         }
         else
         {
+            printf("[BOOT] Failed to copy to external flash, hashes do not match\n");
             printSHA256(details.hash);
             printSHA256(shaInBd);
 
