@@ -125,32 +125,32 @@ int main(void)
     /* Print bootloader information                                          */
     /*************************************************************************/
 
-    tr_info("Mbed Bootloader");
+    //tr_info("Mbed Bootloader");
 
     /* although not referenced, arm_size is used indirectly in sizeof() below */
     /* coverity[set_but_not_used] */
     uint8_t arm_size[] = BOOTLOADER_ARM_SOURCE_HASH;
-
+    /*
     tr_trace("[BOOT] ARM: ");
     for (uint32_t index = 0; index < sizeof(arm_size); index++) {
         tr_trace("%02" PRIX8, bootloader.arm_hash[index]);
     }
     tr_trace("\r\n");
-
+    */
     /* although not referenced, oem_size is used indirectly in sizeof() below */
     /* coverity[set_but_not_used] */
     uint8_t oem_size[] = BOOTLOADER_OEM_SOURCE_HASH;
-
+    /*
     tr_trace("[BOOT] OEM: ");
     for (uint32_t index = 0; index < sizeof(oem_size); index++) {
         tr_trace("%02" PRIX8, bootloader.oem_hash[index]);
     }
     tr_trace("\r\n");
-
+    
     tr_info("Layout: %" PRIu32 " %" PRIX32,
             bootloader.layout,
             (uint32_t) &bootloader);
-
+    */
     /*************************************************************************/
     /* Update                                                                */
     /*************************************************************************/
